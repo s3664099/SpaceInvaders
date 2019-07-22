@@ -46,7 +46,7 @@ public class TankPanel extends JPanel {
 	int FLEETDEPTH = 3;
 	
 	//creates an alien fleet
-	Alien[][] alien = new Alien[FLEETROW][FLEETDEPTH];
+	AlienImage[][] alien = new AlienImage[FLEETROW][FLEETDEPTH];
 	
 	//creates a list to store any bombs that aliens might drop
 	List<Missile> bombs = new LinkedList<Missile>();
@@ -82,19 +82,15 @@ public class TankPanel extends JPanel {
 		//creates a tank object
 		tank = new Tank();
 		
-		//creates an alien object and puts it in position
+		//creates an alien image and puts it in position
 		for (int i=0;i<FLEETROW;i++) {
 			for (int j=0;j<FLEETDEPTH; j++) {
-				alien[i][j] = new Alien();
-		
-				//sets the position
-				alien[i][j].changeHorizontalPosition(alien[i][j].ALIENSIZE*i);
-				alien[i][j].changeVerticalPosition(alien[i][j].ALIENDEPTH*j);
+
+				alien[i][j] = new AlienImage(i, j);
 			}
 		}
 		
-		alien[0][0].leftSide = alien[0][0].leftEdge;
-		alien[0][0].rightSide = alien[FLEETROW-1][0].rightEdge;
+		alien[0][0].setEdges(alien[FLEETROW-1][0].getRightEdge());
 				
 		//creates a timer for when the graphics are moving and sets up an action listener
 		timer = new Timer(delay, new ActionListener() 
@@ -167,13 +163,13 @@ public class TankPanel extends JPanel {
 				if(alien[i][j].visible) {
 
 					//draws the alien
-					drawAlien(e, i,j);
+					alien[i][j].drawAlien(e, STEP);
 					
 					//checks to see if the alien drops a bomb
-					if(alien[i][j].checkMissileDrop()==1)
+					if(alien[i][j].checkDrop())
 					{
 						//if the random number is 1, a bomb is created
-						dropBomb(alien[i][j].leftEdge+20, alien[i][j].top+20);
+						dropBomb(alien[i][j].getLeftEdge()+20, alien[i][j].getTopEdge()+20);
 					}
 				}
 			}
@@ -220,27 +216,7 @@ public class TankPanel extends JPanel {
 		}
 		
 	}
-	
-	public void drawAlien(Graphics e, int no1, int no2) {
-				
-		//sets the alien colour to grey
-		e.setColor(Color.GRAY);
-	
-		//creates its shape
-		e.fillPolygon(alien[no1][no2].xPos, alien[no1][no2].yPos, alien[no1][no2].noPoints);
-	
-		//sets the eye colours to white
-		e.setColor(Color.WHITE);
-	
-		//creates the eyes
-		e.fillRect(alien[no1][no2].eye1x, alien[no1][no2].eye1y, alien[no1][no2].eyeWidth, 
-				alien[no1][no2].eyeWidth);
-		e.fillRect(alien[no1][no2].eye2x, alien[no1][no2].eye2y, alien[no1][no2].eyeWidth, 
-				alien[no1][no2].eyeWidth);
 		
-		alien[no1][no2].moveAlien(STEP);
-	}
-	
 	//this method deals with the bombs
 	public void bombs(Graphics e){
 		//creates a list of bombs to remove
@@ -314,7 +290,7 @@ public class TankPanel extends JPanel {
 				if(alien[i][j].visible && !foundLeft)
 				{
 					//sets the left side of the alien for the fleet
-					alien[i][j].leftSide = alien[i][j].leftEdge;
+					alien[i][j].setLeftSide(alien[i][j].getLeftEdge());
 
 					//flags the left side as having been found
 					foundLeft=true;
@@ -325,7 +301,7 @@ public class TankPanel extends JPanel {
 				{
 					//then sets the right side of the fleet with the right side of this alien
 					//As such the last visible alien on the right will be the right side of the fleet
-					alien[i][j].rightSide = alien[i][j].rightEdge;
+					alien[i][j].setRightSide(alien[i][j].getRightEdge());
 				}
 				
 			}
@@ -342,8 +318,8 @@ public class TankPanel extends JPanel {
 		//checks to see if the missile has hit the alien	
 		for (int i=0;i<FLEETROW;++i){
 			for (int j=0;j<FLEETDEPTH;++j) {
-				if (missile.startX>alien[i][j].leftEdge && missile.startX<alien[i][j].rightEdge 
-						&& missile.startY<alien[i][j].bottom && missile.startY>alien[i][j].top &&
+				if (missile.startX>alien[i][j].getLeftEdge() && missile.startX<alien[i][j].getRightEdge() 
+						&& missile.startY<alien[i][j].getBottomEdge() && missile.startY>alien[i][j].getTopEdge() &&
 						alien[i][j].visible) {
 					
 					//if it has, then the missile, and the alien, vanish
@@ -351,12 +327,12 @@ public class TankPanel extends JPanel {
 					alien[i][j].visible = false;
 					hit = true;
 					
-					explode = new Explosion(alien[i][j].leftEdge+5, alien[i][j].top+5,
-							alien[i][j].leftEdge+10, alien[i][j].top+10);
+					explode = new Explosion(alien[i][j].getLeftEdge()+5, alien[i][j].getTopEdge()+5,
+							alien[i][j].getLeftEdge()+10, alien[i][j].getTopEdge()+10);
 					explosion = true;
 					
 					//the player's score is increased
-					player.setScore(alien[i][j].score);
+					player.setScore(alien[i][j].getScore());
 					
 					//and the panel is refreshed
 					frame.updateStatus();

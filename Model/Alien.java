@@ -5,40 +5,37 @@ import java.util.Random;
 public class Alien {
 	
 	//these set out the outline of the alien
-	public int[] xPos = {20,20,10,10,30,30,20,20,50,50,40,40,60,60,50,50};
-	public int[] yPos = {20,30,30,70,70,60,60,50,50,60,60,70,70,30,30,20};
-	public int noPoints = 16;
+	private int[] xPos = {20,20,10,10,30,30,20,20,50,50,40,40,60,60,50,50};
+	private int[] yPos = {20,30,30,70,70,60,60,50,50,60,60,70,70,30,30,20};
+	private int noPoints = 16;
 	
 	//the define the edges of the alien
-	public int leftEdge = 10;
-	public int rightEdge = 50;
-	public int bottom = 70;
-	public int top = 20;
+	private int leftEdge = 10;
+	private int rightEdge = 50;
+	private int bottom = 70;
+	private int top = 20;
 	
 	//these define the eyes
-	public int eye1x = 25;
-	public int eye1y = 25;
-	public int eye2x = 40;
-	public int eye2y = 25;
-	public int eyeWidth = 5;
-	
-	//sets the alien's visibility
-	public boolean visible = true;
-	
-	//value of the alien
-	public int score = 10;
+	private int eye1x = 25;
+	private int eye1y = 25;
+	private int eye2x = 40;
+	private int eye2y = 25;
+	private int eyeWidth = 5;
 	
 	//sets the direction the fleet moves (left or right)
-	public static int step = 1;
+	private static int step = 1;
 	
+	//value of the alien
+	private int score = 10;
+		
 	//sets up the size of the fleet
-	public static int leftSide = 0;
-	public static int rightSide = 0;
-	public static int topside = 0;
-	public static int bottomside = 0;
+	private static int leftSide = 0;
+	private static int rightSide = 0;
+	private static int topSide = 0;
+	private static int bottomSide = 0;
 	
-	public static int ALIENSIZE = 90;
-	public static int ALIENDEPTH = 70;
+	private static int ALIENSIZE = 90;
+	private static int ALIENDEPTH = 70;
 	
 	//the position of the alien is changed
 	public void changeHorizontalPosition(int move) {
@@ -73,26 +70,7 @@ public class Alien {
 		}
 		
 	}
-	
-	//checks to see which direction the fleet is heading
-	public void checkDirection(int step, int width) {
 		
-		//checks to see if it has reached the left side of the screen
-		if (leftSide<5) {
-			//sends it in the opposite direction if it has
-			this.step = 1;
-
-			//checks to see if it has reached the right side of the screen	
-		} else if (rightSide>width-5) {
-			this.step = -1;
-		}
-		
-		//moves the fleet boundaries
-		leftSide+=(step*this.step);
-		rightSide+=(step*this.step);
-		
-	}
-	
 	//this moves the alien across the screen
 	public void moveAlien(int step) {
 						
@@ -108,4 +86,130 @@ public class Alien {
 		return random.nextInt(1000);
 	}
 	
+	//getters for drawing the alien graphic
+	public int[] getXPos()
+	{
+		return xPos;
+	}
+	
+	public int[] getYPos()
+	{
+		return yPos;
+	}
+	
+	public int getNoPoints()
+	{
+		return noPoints;
+	}
+	
+	//this returns the right edge of the aliens
+	public int getRightSide()
+	{
+		return rightSide;
+	}
+	
+	//returns the left edge of the alien
+	public int getLeftSide()
+	{
+		return leftSide;
+	}
+	
+	//returns the top edge of the alien
+	public int getTopSide()
+	{
+		return topSide;
+	}
+	
+	//returns the bottom edge of the alien
+	public int getBottomSide()
+	{
+		return bottomSide;
+	}
+	
+	//returns the score value of the alien
+	public int getScore()
+	{
+		return score;
+	}
+	
+	public int getRightEdge()
+	{
+		return rightEdge;
+	}
+	
+	//returns the left edge of the alien
+	public int getLeftEdge()
+	{
+		return leftEdge;
+	}
+	
+	//returns the top edge of the alien
+	public int getTopEdge()
+	{
+		return top;
+	}
+	
+	//returns the bottom edge of the alien
+	public int getBottomEdge()
+	{
+		return bottom;
+	}
+	
+	public void setLeftSide(int side)
+	{
+		leftSide = side;
+	}
+	
+	public void setRightSide(int side)
+	{
+		rightSide = side;
+	}
+	
+	//getters for the eye coordinates
+	//I have used values so that I only need to write one getter as opposed to
+	//a getter for each of the coordinates of the eye
+	public int getEyeCoords(int coord)
+	{
+		int eye = 0;
+		
+		if (coord == 1)
+			eye = eye1x;
+		else if (coord == 2)
+			eye = eye1y;
+		else if (coord == 3)
+			eye = eye2x;
+		else if (coord == 4)
+			eye = eye2y;
+		else if (coord == 5)
+			eye = eyeWidth;
+		
+		return eye;
+		
+	}
+	
+	//getter for the ALIENSIZE and ALIENDEPTH value
+	//I have used a boolean value so that it can get either/or
+	public int getDepth(boolean depth)
+	{
+		int value = 0;
+		
+		if (depth)
+			value = ALIENSIZE;
+		else
+			value = ALIENDEPTH;
+		
+		return value;
+	}
+	
+	//getter and the setter for the step
+	public int getStep()
+	{
+		return step;
+	}
+	
+	public void setStep(int step)
+	{
+		this.step = step;
+	}
+
 }
