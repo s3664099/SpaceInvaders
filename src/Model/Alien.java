@@ -6,9 +6,9 @@ import java.lang.Math;
 public class Alien {
 	
 	//these set out the outline of the alien
-	private int[] xPos = {20,20,10,10,30,30,20,20,50,50,40,40,60,60,50,50};
-	private int[] yPos = {20,30,30,70,70,60,60,50,50,60,60,70,70,30,30,20};
-	private int noPoints = 16;
+	private int[] xPos;
+	private int[] yPos;
+	private int noPoints;
 	
 	//the define the edges of the alien
 	private int leftEdge = 10;
@@ -37,6 +37,14 @@ public class Alien {
 	
 	private static int ALIENSIZE = 90;
 	private static int ALIENDEPTH = 70;
+	
+	public void createAlien (int[] xPos, int[] yPos, int noPoints) {
+		
+		this.xPos = xPos;
+		this.yPos = yPos;
+		this.noPoints = noPoints;
+		
+	}
 	
 	public void changeHorizontalPosition(int move) {
 		

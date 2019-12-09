@@ -4,11 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import Model.Alien;
+import Model.AlienTopOne;
+import Model.AlienTopTwo;
 
 //a class for the alien graphic
 public class AlienImage {
 	
-	Alien alien;
+	private Alien alien;
 		
 	//sets the alien's visibility
 	private boolean visible = true;
@@ -16,9 +18,19 @@ public class AlienImage {
 	private static boolean movingDown = false;
 	private static int downMove = 0;
 	
-	public AlienImage(int horizontal, int vertical)
+	private int type = 0;
+	private boolean alienImage;
+	
+	public AlienImage(int horizontal, int vertical, int type, boolean alienImage)
 	{
-		alien = new Alien();
+		this.type = type;
+		this.alienImage = alienImage;
+		
+		if (type == 0) {
+			alien = new AlienTopOne();
+		} else if (type == 1) {
+			alien = new AlienTopTwo();
+		}
 		
 		//sets the position of the alien
 		alien.changeHorizontalPosition(alien.getDepth(true)*horizontal);
@@ -87,6 +99,10 @@ public class AlienImage {
 		this.visible = visible;
 	}
 	
+	public boolean getAlienImageVersion() {
+		return alienImage;
+	}
+	
 	//checks to see which direction the fleet is heading
 	public void checkDirection(int step, int width) {
 		
@@ -108,7 +124,7 @@ public class AlienImage {
 		//again.
 		} else if (movingDown == true) {
 			
-			if (downMove == 5) {
+			if (downMove == 10) {
 				downMove = 0;
 				movingDown = false;
 			} else {
@@ -133,7 +149,11 @@ public class AlienImage {
 		e.fillPolygon(alien.getXPos(), alien.getYPos(), alien.getNoPoints());
 	
 		//sets the eye colours to white
-		e.setColor(Color.WHITE);
+		if (type == 0) {
+			e.setColor(Color.WHITE);
+		} else if (type == 1) {
+			e.setColor(Color.YELLOW);
+		}
 	
 		//creates the eyes
 		e.fillRect(alien.getEyeCoords(1), alien.getEyeCoords(2), alien.getEyeCoords(5), alien.getEyeCoords(5));

@@ -2,10 +2,10 @@ package Model;
 
 public class Missile {
 	
-	public int width = 10;
-	public int height = 20;
-	public int startX;
-	public int startY;
+	private int width = 10;
+	private int height = 20;
+	private int startX;
+	private int startY;
 	
 	public Missile(int startX, int startY)
 	{
@@ -21,6 +21,22 @@ public class Missile {
 	//this method is for the bomb dropped by the alien
 	public void drop(int step) {
 		startY+=step;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getStartX() {
+		return startX;
+	}
+
+	public int getStartY() {
+		return startY;
 	}
 
 }
