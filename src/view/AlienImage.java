@@ -11,7 +11,10 @@ public class AlienImage {
 	Alien alien;
 		
 	//sets the alien's visibility
-	public boolean visible = true;
+	private boolean visible = true;
+	private int edgeSpace = 5;
+	private int downMove = 0;
+	private boolean movingDown = false;
 	
 	public AlienImage(int horizontal, int vertical)
 	{
@@ -72,17 +75,35 @@ public class AlienImage {
 		return alien.getScore();
 	}
 	
+	public boolean getMovingDown() {
+		return movingDown;
+	}
+	
+	public boolean getVisibility() {
+		return visible;
+	}
+	
+	public void setVisibility(boolean visible) {
+		this.visible = visible;
+	}
+	
 	//checks to see which direction the fleet is heading
 	public void checkDirection(int step, int width) {
 		
 		//checks to see if it has reached the left side of the screen
-		if (alien.getLeftSide()<5) {
+		if (alien.getLeftSide()<edgeSpace && movingDown == false) {
+			
 			//sends it in the opposite direction if it has
+			//And moves it down one
 			alien.setStep(1);
+			movingDown = true;
 
 			//checks to see if it has reached the right side of the screen	
-		} else if (alien.getRightSide()>width-5) {
+		} else if (alien.getRightSide()>width-edgeSpace && movingDown == false) {
 			alien.setStep(-1);
+			movingDown = true;
+		} else if (movingDown == true) {
+			movingDown = false;
 		}
 				
 		//moves the fleet boundaries

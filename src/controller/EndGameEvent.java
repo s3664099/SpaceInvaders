@@ -14,7 +14,4 @@ public class EndGameEvent implements ActionListener {
 		System.exit(0);
 		
 	}
-	
-	
-
 }

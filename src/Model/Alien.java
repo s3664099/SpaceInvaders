@@ -37,7 +37,6 @@ public class Alien {
 	private static int ALIENSIZE = 90;
 	private static int ALIENDEPTH = 70;
 	
-	//the position of the alien is changed
 	public void changeHorizontalPosition(int move) {
 		
 		//goes through each of the x-coordinates and changes them by the amount
@@ -54,7 +53,6 @@ public class Alien {
 		
 	}
 	
-	//the position of the alien is changed
 	public void changeVerticalPosition(int move) {
 		
 		//goes through each of the x-coordinates and changes them by the amount
@@ -102,34 +100,24 @@ public class Alien {
 		return noPoints;
 	}
 	
-	//this returns the right edge of the aliens
 	public int getRightSide()
 	{
 		return rightSide;
 	}
 	
-	//returns the left edge of the alien
 	public int getLeftSide()
 	{
 		return leftSide;
 	}
 	
-	//returns the top edge of the alien
 	public int getTopSide()
 	{
 		return topSide;
 	}
 	
-	//returns the bottom edge of the alien
 	public int getBottomSide()
 	{
 		return bottomSide;
-	}
-	
-	//returns the score value of the alien
-	public int getScore()
-	{
-		return score;
 	}
 	
 	public int getRightEdge()
@@ -137,19 +125,16 @@ public class Alien {
 		return rightEdge;
 	}
 	
-	//returns the left edge of the alien
 	public int getLeftEdge()
 	{
 		return leftEdge;
 	}
 	
-	//returns the top edge of the alien
 	public int getTopEdge()
 	{
 		return top;
 	}
 	
-	//returns the bottom edge of the alien
 	public int getBottomEdge()
 	{
 		return bottom;
@@ -163,6 +148,12 @@ public class Alien {
 	public void setRightSide(int side)
 	{
 		rightSide = side;
+	}
+	
+	//This returns the value of the score if the alien is taken out
+	public int getScore()
+	{
+		return score;
 	}
 	
 	//getters for the eye coordinates

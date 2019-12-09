@@ -100,7 +100,6 @@ public class TankPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				repaint();
-				
 			}
 			
 		});
@@ -160,7 +159,7 @@ public class TankPanel extends JPanel {
 			for (int j=0;j<FLEETDEPTH;j++) {
 
 				//checks to see if the alien is visible
-				if(alien[i][j].visible) {
+				if(alien[i][j].getVisibility()) {
 
 					//draws the alien
 					alien[i][j].drawAlien(e, STEP);
@@ -287,7 +286,7 @@ public class TankPanel extends JPanel {
 			for (int j=0;j<FLEETDEPTH;j++) {
 				
 				//if the alien is visible, and the left has not been found
-				if(alien[i][j].visible && !foundLeft)
+				if(alien[i][j].getVisibility() && !foundLeft)
 				{
 					//sets the left side of the alien for the fleet
 					alien[i][j].setLeftSide(alien[i][j].getLeftEdge());
@@ -297,7 +296,7 @@ public class TankPanel extends JPanel {
 				}
 
 				//if the alien is visible
-				if(alien[i][j].visible)
+				if(alien[i][j].getVisibility())
 				{
 					//then sets the right side of the fleet with the right side of this alien
 					//As such the last visible alien on the right will be the right side of the fleet
@@ -320,11 +319,11 @@ public class TankPanel extends JPanel {
 			for (int j=0;j<FLEETDEPTH;++j) {
 				if (missile.startX>alien[i][j].getLeftEdge() && missile.startX<alien[i][j].getRightEdge() 
 						&& missile.startY<alien[i][j].getBottomEdge() && missile.startY>alien[i][j].getTopEdge() &&
-						alien[i][j].visible) {
+						alien[i][j].getVisibility()) {
 					
 					//if it has, then the missile, and the alien, vanish
 					missileVisible = false;
-					alien[i][j].visible = false;
+					alien[i][j].setVisibility(false);
 					hit = true;
 					
 					explode = new Explosion(alien[i][j].getLeftEdge()+5, alien[i][j].getTopEdge()+5,
