@@ -15,7 +15,6 @@ public class Player {
 	
 	//reduces the number of lives by one
 	public void takeLife() {
-
 		lives --;
 	}
 	

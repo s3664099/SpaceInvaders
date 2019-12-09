@@ -170,6 +170,19 @@ public class TankPanel extends JPanel {
 						//if the random number is 1, a bomb is created
 						dropBomb(alien[i][j].getLeftEdge()+20, alien[i][j].getTopEdge()+20);
 					}
+					
+					//Checks to see if the alien has collided with the player
+					//or the alien has reached the bottom of the screen (ie, has landed)
+					//If it has, then it is game over man, game over.
+					if(alien[i][j].getBottomEdge()>getHeight() ||
+							(alien[i][j].getBottomEdge()>tank.gunY && alien[i][j].getLeftEdge()>tank.x
+							&& alien[i][j].getRightEdge()<(tank.x+tank.width))) {
+
+						drawExplosion(e);
+						tankHit=true;
+						timer.stop();
+						frame.gameOver();
+					}
 				}
 			}
 		}
@@ -261,6 +274,7 @@ public class TankPanel extends JPanel {
 				
 				//if it hasn't the bomb is drawn
 				drawBomb(e,bomb);
+				
 			} else {
 				
 				//otherwise it is removed from the list
