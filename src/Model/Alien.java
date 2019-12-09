@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.Random;
+import java.lang.Math;
 
 public class Alien {
 	
@@ -70,9 +71,16 @@ public class Alien {
 	}
 		
 	//this moves the alien across the screen
-	public void moveAlien(int step) {
+	public void moveAlien(int step, boolean movingDown) {
+		
+		if (movingDown) {
+			
+			changeVerticalPosition(step*Math.abs(this.step));
+			
+		} else {
 						
-		changeHorizontalPosition(step*this.step);
+			changeHorizontalPosition(step*this.step);
+		}
 		
 	}
 	

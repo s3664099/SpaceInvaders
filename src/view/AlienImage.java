@@ -13,8 +13,8 @@ public class AlienImage {
 	//sets the alien's visibility
 	private boolean visible = true;
 	private int edgeSpace = 5;
-	private int downMove = 0;
-	private boolean movingDown = false;
+	private static boolean movingDown = false;
+	private static int downMove = 0;
 	
 	public AlienImage(int horizontal, int vertical)
 	{
@@ -102,8 +102,18 @@ public class AlienImage {
 		} else if (alien.getRightSide()>width-edgeSpace && movingDown == false) {
 			alien.setStep(-1);
 			movingDown = true;
+			
+		//checks to see if the alien is moving down, and whether the counter
+		//has reached a point where the alien must start moving across the screen
+		//again.
 		} else if (movingDown == true) {
-			movingDown = false;
+			
+			if (downMove == 5) {
+				downMove = 0;
+				movingDown = false;
+			} else {
+				downMove++;
+			}
 		}
 				
 		//moves the fleet boundaries
@@ -129,7 +139,7 @@ public class AlienImage {
 		e.fillRect(alien.getEyeCoords(1), alien.getEyeCoords(2), alien.getEyeCoords(5), alien.getEyeCoords(5));
 		e.fillRect(alien.getEyeCoords(3), alien.getEyeCoords(4), alien.getEyeCoords(5), alien.getEyeCoords(5));
 		
-		alien.moveAlien(STEP);
+		alien.moveAlien(STEP, movingDown);
 	}
 	
 	//checks to see if the alien has dropped a bomb
