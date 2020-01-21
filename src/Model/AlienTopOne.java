@@ -10,15 +10,11 @@ public class AlienTopOne extends Alien {
 	private int[] yPos = {20,30,30,70,70,60,60,50,50,60,60,70,70,30,30,20};
 	private int noPoints = 16;
 	
-	//sets the direction the fleet moves (left or right)
-	private static int step = 1;
-
 	public AlienTopOne () {
 
 		super.createAlien(xPos, yPos, noPoints);
 
 	}
-	
 	
 	public void changeHorizontalPosition(int move) {
 	

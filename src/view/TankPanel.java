@@ -1,6 +1,7 @@
 package view;
 
-//TODO: Mother Ship across the top of the screen
+//TODO: Barriers
+//TODO: Mothership fires laser
 //TODO: More Difficulty as levels go up
 //TODO: Random Powerups
 
@@ -10,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -28,7 +30,6 @@ public class TankPanel extends JPanel {
 	private int STEP = 1; //the amount of movement
 	private int TANKSTEP = 2;
 	private int BOMBSTEP = 6;
-	private int x_move = STEP;
 	private int panelWidth = 770;
 	private Timer timer;
 	
@@ -37,8 +38,7 @@ public class TankPanel extends JPanel {
 	
 	//creates a missile object
 	private Missile missile;
-	private int bombScore = 100;
-	
+	private int bombScore = 500;
 	
 	//defines the size of the fleet
 	int FLEETROW = 8;
@@ -47,6 +47,9 @@ public class TankPanel extends JPanel {
 	//creates an alien fleet
 	AlienImage[][] alien = new AlienImage[FLEETROW][FLEETDEPTH];
 	AlienImage[][] alienAltImage = new AlienImage[FLEETROW][FLEETDEPTH];
+	AlienImage motherShip;
+	int motherShipStep = 2;
+	boolean motherShipAppear = false;
 	
 	//creates a list to store any bombs that aliens might drop
 	List<Missile> bombs = new LinkedList<Missile>();
@@ -97,7 +100,7 @@ public class TankPanel extends JPanel {
 				alienImage = !alienImage;
 			}
 		}
-		
+				
 		alien[0][0].setEdges(alien[FLEETROW-1][0].getRightEdge());
 		alienAltImage[0][0].setEdges(alienAltImage[FLEETROW-1][0].getRightEdge());
 				
@@ -162,7 +165,7 @@ public class TankPanel extends JPanel {
 		
 		//checks the direction and sets the boundaries of the fleet
 		alien[0][0].checkDirection(STEP, panelWidth);
-				
+		
 		//generates the aliens
 		for (int i = 0;i<FLEETROW;i++) {
 			for (int j=0;j<FLEETDEPTH;j++) {
@@ -225,8 +228,7 @@ public class TankPanel extends JPanel {
 			alienType = !alienType;	
 			alienDrawCounter=0;
 		}
-							
-		
+									
 		//sets the bomb colour to yellow
 		e.setColor(Color.YELLOW);
 		
@@ -265,6 +267,31 @@ public class TankPanel extends JPanel {
 			e.fillRect(tank.x,tank.y,tank.width,tank.height);
 			e.fillRect(tank.topX,tank.topY,tank.topWidth,tank.topHeight);
 			e.fillRect(tank.gunX,tank.gunY,tank.topHeight,tank.gunHeight);
+		}
+		
+		if (motherShipAppear) {
+			motherShip.checkDirection(8, panelWidth);
+			motherShip.drawAlien(e, motherShipStep);
+						
+			if (motherShip.getLeftEdge()>1500) {
+				motherShipAppear = false;
+			}
+			
+		} else {
+			checkMotherShip();
+		}
+		
+	}
+	
+	public void checkMotherShip() {
+		
+		Random random = new Random();
+
+		if (random.nextInt(1000)<1) {
+			motherShip = new AlienImage(0,0, 2, false);
+			motherShip.setLeftSide(0);
+			motherShip.setRightSide(panelWidth);
+			motherShipAppear = true;
 		}
 		
 	}
@@ -407,11 +434,33 @@ public class TankPanel extends JPanel {
 					
 					//and the panel is refreshed
 					frame.updateStatus();
-					
 				}			
 			}
 		}
+		
+		//checks to see if missile has hit the mothership
+		if (motherShipAppear) {
 
+			if (missile.getStartX()>motherShip.getLeftEdge() && missile.getStartX()<motherShip.getRightEdge() 
+				&& missile.getStartY()<motherShip.getBottomEdge()) {
+			
+				//if it has, then the missile, and the alien, vanish
+				missileVisible = false;
+				motherShipAppear = false;
+				hit = true;
+			
+				explode = new Explosion(motherShip.getLeftEdge()+5, motherShip.getTopEdge()+5,
+					motherShip.getLeftEdge()+10, motherShip.getTopEdge()+10);
+				explosion = true;
+			
+				//the player's score is increased
+				player.setScore(motherShip.getScore());
+			
+				//and the panel is refreshed
+				frame.updateStatus();
+			}
+		}
+		
 		//if the missile hasn't hit an alien
 		if(!hit) {
 

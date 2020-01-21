@@ -64,7 +64,7 @@ public class Alien {
 	
 	public void changeVerticalPosition(int move) {
 		
-		//goes through each of the x-coordinates and changes them by the amount
+		//goes through each of the y-coordinates and changes them by the amount
 		//of move
 		bottom += move;
 		top += move;
@@ -83,7 +83,7 @@ public class Alien {
 		
 		if (movingDown) {
 			
-			changeVerticalPosition(step*Math.abs(this.step));
+			changeVerticalPosition(step*Math.abs(step));
 			
 		} else {
 						

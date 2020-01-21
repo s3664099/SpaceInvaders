@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import Model.Alien;
 import Model.AlienTopOne;
 import Model.AlienTopTwo;
+import Model.MotherShip;
 
 //a class for the alien graphic
 public class AlienImage {
@@ -30,11 +31,17 @@ public class AlienImage {
 			alien = new AlienTopOne();
 		} else if (type == 1) {
 			alien = new AlienTopTwo();
+		} else if (type == 2 ) {
+			alien = new MotherShip();
 		}
 		
-		//sets the position of the alien
-		alien.changeHorizontalPosition(alien.getDepth(true)*horizontal);
-		alien.changeVerticalPosition(alien.getDepth(false)*vertical);
+		if (type != 2) {
+			//sets the position of the alien
+			alien.changeHorizontalPosition(alien.getDepth(true)*horizontal);
+			alien.changeVerticalPosition(alien.getDepth(false)*vertical);
+		} else {
+			alien.changeHorizontalPosition(alien.getDepth(true)*horizontal);
+		}
 		
 	}
 	
@@ -51,7 +58,7 @@ public class AlienImage {
 		alien.setLeftSide(side);
 	}
 	
-	//sets the left side of the fleet
+	//sets the right side of the fleet
 	public void setRightSide(int side)
 	{
 		alien.setRightSide(side);
@@ -103,8 +110,7 @@ public class AlienImage {
 		return alienImage;
 	}
 	
-	//checks to see which direction the fleet is heading
-	public void checkDirection(int step, int width) {
+	private void alienDirection (int step, int width) {
 		
 		//checks to see if it has reached the left side of the screen
 		if (alien.getLeftSide()<edgeSpace && movingDown == false) {
@@ -137,7 +143,16 @@ public class AlienImage {
 		alien.setLeftSide(side+=(step*alien.getStep()));
 
 		side = alien.getRightSide();
-		alien.setRightSide(side+=(step*alien.getStep()));		
+		alien.setRightSide(side+=(step*alien.getStep()));
+	}
+	
+	//checks to see which direction the fleet is heading
+	public void checkDirection(int step, int width) {
+		
+		if (type != 2) {
+			alienDirection(step, width);
+		}
+		
 	}
 	
 	public void drawAlien(Graphics e, int STEP) {
@@ -154,12 +169,21 @@ public class AlienImage {
 		} else if (type == 1) {
 			e.setColor(Color.YELLOW);
 		}
-	
-		//creates the eyes
-		e.fillRect(alien.getEyeCoords(1), alien.getEyeCoords(2), alien.getEyeCoords(5), alien.getEyeCoords(5));
-		e.fillRect(alien.getEyeCoords(3), alien.getEyeCoords(4), alien.getEyeCoords(5), alien.getEyeCoords(5));
+
+		if (type != 2) {
+			//creates the eyes
+			e.fillRect(alien.getEyeCoords(1), alien.getEyeCoords(2), alien.getEyeCoords(5), alien.getEyeCoords(5));
+			e.fillRect(alien.getEyeCoords(3), alien.getEyeCoords(4), alien.getEyeCoords(5), alien.getEyeCoords(5));
+		}
+			
+		//this is to get away from the static variable
+		boolean downMove = movingDown;
 		
-		alien.moveAlien(STEP, movingDown);
+		if (type == 2) {
+			downMove = false;
+		} 
+		
+		alien.moveAlien(STEP, downMove);
 	}
 	
 	//checks to see if the alien has dropped a bomb
