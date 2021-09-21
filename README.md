@@ -31,7 +31,7 @@ This will compile the code. Once the code has been compiled, to start the game t
 
 It is necessary to indicate the package where the driver program is located. When you do that, you should recieve a screen as follows:
 
-![Screenshot](https://raw.githubusercontent.com/s3664099/SpaceInvaders/img/ScreenShot.png)
+![Screenshot](https://raw.githubusercontent.com/s3664099/SpaceInvaders/img/Screenshot.png)
 
 ## Upgrades
 
