@@ -10,6 +10,7 @@ The game is written in Java, and I am using the Model/View/Controller pattern th
 At this stage, I am not using icons for the various objects, but rather simply block graphics. However, my plan is to covert the code so that proper icons are used instead of the blocks. That will no doubt be a challenge, but I hopefull will be able to get it to work.
 
 *Current Status*
+
 At this stage I have one level working. There are three rows of aliens, which have been created using blocks, and they all look the same. They do animate between two forms, and each of the aliens are at a different spot to the one next to it. The aliens drop bombs, move across the screen and move to the bottom slowly. Also, a mother ship moves across the top of the screen.
 
 Score is kept for hitting the aliens, which is 10 points for the alien, and 100 points for the mother ship. An explosion appears when the alien, or mothership, is hit. The aliens move across the screen, and down one when they reach the edge, though the game will ignore aliens that have been shot, meaning that when a column is taken out, it will take longer for the aliens to reach the edge of the screen. If the player is hit, one life is lost, and when all lives are lost the game is over, and the player is given the option to play again, or end the game. Also, when the player is hit, the game pauses for a short time.
