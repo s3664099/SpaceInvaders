@@ -1,14 +1,8 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
 import javax.swing.JFrame;
-
 import Model.Player;
-
 import controller.MoveTank;
 
 @SuppressWarnings("serial")
@@ -27,7 +21,7 @@ public class SpaceFrame extends JFrame {
 		
 		//Generates the window
 		setLayout(new BorderLayout());
-		
+				
 		newGame();
 		
 		//kills the window when the 'x' is clicked at the top

@@ -9,14 +9,11 @@ import Model.Player;
 
 public class GameStatusBar extends JPanel {
 	
-	private Player player;
 	private JLabel label = new JLabel();
 	
 	//sets up the status bar
 	public GameStatusBar(Player player) {
-		
-		this.player = player;
-		
+				
 		setLayout(new GridLayout(1,3,0,10));
 		
 		//The bar has an entry for lives, score, and level

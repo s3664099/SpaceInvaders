@@ -35,14 +35,7 @@ public class Explosion {
 
 		//increases the timer by one
 		timer++;
-		
-		//prints the co-ordinates to the console
-//		System.out.println("out X: "+outX+" out Y: "+outY+" width: "+outer);
-//		System.out.println("out X: "+(outX+outer)+" out Y: "+(outY+outer));
-//		System.out.println("in X: "+inX+" in Y: "+inY+" width: "+inner);
-//		System.out.println("in X: "+(inX+inner)+" in Y: "+(inY+inner));
-
-		
+	
 	}
 
 }

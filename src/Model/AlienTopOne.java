@@ -1,6 +1,5 @@
 package Model;
 
-import java.lang.Math;
 import java.util.Random;
 
 public class AlienTopOne extends Alien {

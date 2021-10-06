@@ -3,7 +3,7 @@ package Model;
 import java.util.Random;
 import java.lang.Math;
 
-public class Alien {
+public abstract class Alien {
 	
 	//these set out the outline of the alien
 	private int[] xPos;

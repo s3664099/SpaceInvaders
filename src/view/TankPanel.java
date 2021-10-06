@@ -1,22 +1,19 @@
 package view;
 
-//TODO: Barriers
-//TODO: Mothership fires laser
-//TODO: More Difficulty as levels go up
-//TODO: Random Powerups
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import Model.Alien;
 import Model.Explosion;
 import Model.Missile;
 import Model.Player;
@@ -77,11 +74,18 @@ public class TankPanel extends JPanel {
 	//Variables to determine the type of alien being drawn
 	private boolean alienType = false;
 	private int alienDrawCounter = 0;
+	private BufferedImage backgroundImage;
 	
 	public TankPanel(SpaceFrame frame, Player player)
 	{
-		//sets the background of the panel
-		setBackground(Color.BLACK);
+		
+		//sets the background of the panel	
+		try {
+			backgroundImage = ImageIO.read(getClass().getResource("../../img/space-background-01.jpg"));
+		} catch (IOException e1) {
+			System.out.println(e1);
+			setBackground(Color.BLACK);
+		}
 		
 		this.frame = frame;
 		this.player = player;
@@ -122,8 +126,12 @@ public class TankPanel extends JPanel {
 	//this method paints the tank
 	public void paintComponent(Graphics e)
 	{
+				
 		//calls the superclass
 		super.paintComponent(e);
+		
+		//Draws the background image
+		e.drawImage(backgroundImage,0,0,800,600,this);
 		
 		//checks to see if the timer has been paused
 		if(pause) {
@@ -133,14 +141,14 @@ public class TankPanel extends JPanel {
 		}
 				
 		//moves the object along the vertical axis
-		if(tank.horizontal && !tankHit)
+		if(tank.isHorizontal() && !tankHit)
 		{
 			
 			//if the right arrow is pressed
 			if(keyPress == 39)
 			{
 				//and the tank is not at the right edge of the screen
-				if(tank.x<panelWidth-tank.width)
+				if(tank.getXStart()<panelWidth-tank.getWidth())
 				{
 					//moves the tank to the right
 					tank.move(TANKSTEP);
@@ -150,7 +158,7 @@ public class TankPanel extends JPanel {
 			} else if (keyPress == 37) {
 				
 				//and the tank is not at the left edge of the screen
-				if(tank.x>0)
+				if(tank.getXStart()>0)
 				{
 					//moves the tank to the left
 					tank.move(-TANKSTEP);
@@ -166,12 +174,16 @@ public class TankPanel extends JPanel {
 		//checks the direction and sets the boundaries of the fleet
 		alien[0][0].checkDirection(STEP, panelWidth);
 		
+		int alienCount = 0;
+		
 		//generates the aliens
 		for (int i = 0;i<FLEETROW;i++) {
 			for (int j=0;j<FLEETDEPTH;j++) {
 
 				//checks to see if the alien is visible
 				if(alien[i][j].getVisibility()) {
+					
+					alienCount +=1;
 					
 					if (alien[i][j].getAlienImageVersion()) {
 						//determines which alien to draw and draws it
@@ -209,8 +221,9 @@ public class TankPanel extends JPanel {
 					//or the alien has reached the bottom of the screen (ie, has landed)
 					//If it has, then it is game over man, game over.
 					if(alien[i][j].getBottomEdge()>getHeight() ||
-							(alien[i][j].getBottomEdge()>tank.gunY && alien[i][j].getLeftEdge()>tank.x
-							&& alien[i][j].getRightEdge()<(tank.x+tank.width))) {
+							(alien[i][j].getBottomEdge()>tank.getGunY() 
+							&& alien[i][j].getLeftEdge()>tank.getXStart()
+							&& alien[i][j].getRightEdge()<(tank.getXStart()+tank.getWidth()))) {
 
 						drawExplosion(e);
 						tankHit=true;
@@ -221,6 +234,8 @@ public class TankPanel extends JPanel {
 			}
 			
 		}
+		
+		
 		
 		alienDrawCounter ++;
 		
@@ -264,9 +279,9 @@ public class TankPanel extends JPanel {
 			e.setColor(Color.BLUE);
 		
 			//sets the shape of the object
-			e.fillRect(tank.x,tank.y,tank.width,tank.height);
-			e.fillRect(tank.topX,tank.topY,tank.topWidth,tank.topHeight);
-			e.fillRect(tank.gunX,tank.gunY,tank.topHeight,tank.gunHeight);
+			e.fillRect(tank.getXStart(),tank.getYStart(),tank.getWidth(),tank.getHeight());
+			e.fillRect(tank.getTopX(),tank.getTopY(),tank.getTopWidth(),tank.getTopHeight());
+			e.fillRect(tank.getGunX(),tank.getGunY(),tank.getTopHeight(),tank.getGunHeight());
 		}
 		
 		if (motherShipAppear) {
@@ -305,11 +320,12 @@ public class TankPanel extends JPanel {
 		for(Missile bomb:bombs) {
 			
 			//checks to see if the bomb has hit the player
-			if(bomb.getStartY()>tank.gunY && bomb.getStartX()>tank.x && bomb.getStartX()<(tank.x+tank.width) 
-					&& bomb.getStartY()<(tank.gunY+tank.height+tank.topHeight+tank.gunHeight)) {
+			if(bomb.getStartY()>tank.getGunY() && bomb.getStartX()>tank.getXStart() 
+					&& bomb.getStartX()<(tank.getXStart()+tank.getWidth()) 
+					&& bomb.getStartY()<(tank.getGunY()+tank.getHeight()+tank.getTopHeight()+tank.getGunHeight())) {
 				
 				//if it does and explosion is generated
-				explode = new Explosion(tank.gunX, tank.y, tank.gunX, tank.y);
+				explode = new Explosion(tank.getGunX(), tank.getYStart(), tank.getGunX(), tank.getYStart());
 				explosion = true;
 				tankHit = true;
 				
@@ -343,7 +359,7 @@ public class TankPanel extends JPanel {
 					&& bomb.getStartY()<(missile.getStartY()+missile.getHeight())) {
 				
 					//if it does and explosion is generated
-					explode = new Explosion(tank.gunX, tank.y, tank.gunX, tank.y);
+					explode = new Explosion(tank.getGunX(), tank.getYStart(), tank.getGunX(), tank.getYStart());
 					explosion = true;
 					player.setScore(bombScore);
 					missileVisible = false;
@@ -522,14 +538,14 @@ public class TankPanel extends JPanel {
 	//stops the tank moving
 	public void stopMove()
 	{
-		tank.horizontal = false;
+		tank.setHorizontal(false);
 	}
 
 	//the horizontal move method
 	public void moveHorizontal(int keyPress)
 	{
 		this.keyPress = keyPress;
-		tank.horizontal = true;
+		tank.setHorizontal(true);
 	}
 	
 	public void fireMissile()
@@ -538,7 +554,7 @@ public class TankPanel extends JPanel {
 		if(!missileVisible) {
 			
 			//if it isn't, creates a new missile
-			missile = new Missile(tank.gunX, tank.gunY);
+			missile = new Missile(tank.getGunX(), tank.getGunY());
 			missileVisible=true;
 		}
 	}

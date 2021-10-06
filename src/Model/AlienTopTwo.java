@@ -1,6 +1,5 @@
 package Model;
 
-import java.lang.Math;
 import java.util.Random;
 
 public class AlienTopTwo extends Alien {
@@ -10,9 +9,6 @@ public class AlienTopTwo extends Alien {
 	private int[] yPos = {20,30,30,80,80,50,50,80,80,30,30,20};
 	private int noPoints = 12;
 	
-	//sets the direction the fleet moves (left or right)
-	private static int step = 1;
-
 	public AlienTopTwo () {
 
 		super.createAlien(xPos, yPos, noPoints);
