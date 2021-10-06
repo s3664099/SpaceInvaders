@@ -93,11 +93,13 @@ public abstract class Alien {
 	}
 	
 	//this method returns a random number
-	public int checkMissileDrop() {
+	public int checkMissileDrop(int levelModifier) {
 		
 		Random random = new Random();
 		
-		return random.nextInt(1000);
+		levelModifier = levelModifier * 20;
+		
+		return random.nextInt(1000-levelModifier);
 	}
 	
 	//getters for drawing the alien graphic

@@ -27,6 +27,11 @@ public class Player {
 	public int getLevel() {
 		return level;
 	}
+	
+	//Increases the level of the player
+	public void increaseLevel() {
+		level ++;
+	}
 
 	//gets the number of lives
 	public int getLives() {

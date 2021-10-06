@@ -187,13 +187,13 @@ public class AlienImage {
 	}
 	
 	//checks to see if the alien has dropped a bomb
-	public boolean checkDrop()
+	public boolean checkDrop(int levelModifier)
 	{
 		//sets the flag to false
 		boolean drop = false;
 		
 		//checks to see if the alien drops a bomb
-		if(alien.checkMissileDrop()==1)
+		if(alien.checkMissileDrop(levelModifier)==1)
 		{
 			//if it is the case, the flag is set to true
 			drop = true;

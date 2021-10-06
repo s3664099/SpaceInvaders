@@ -19,12 +19,15 @@ import Model.Missile;
 import Model.Player;
 import Model.Tank;
 
+//TODO: change next level so that it is on this screen. Increase the step, player level, and make all aliens visible.
+//Load six background images, and the one displayed is based on the level.
+
 @SuppressWarnings("serial")
 public class TankPanel extends JPanel {
 	
 	//sets up the parameters of the panel
 	private int delay = 1000/60;
-	private int STEP = 1; //the amount of movement
+	private int step; //the amount of movement
 	private int TANKSTEP = 2;
 	private int BOMBSTEP = 6;
 	private int panelWidth = 770;
@@ -89,6 +92,8 @@ public class TankPanel extends JPanel {
 		
 		this.frame = frame;
 		this.player = player;
+		
+		step = player.getLevel();
 		
 		//creates a tank object
 		tank = new Tank();
@@ -172,8 +177,9 @@ public class TankPanel extends JPanel {
 		checkSize();
 		
 		//checks the direction and sets the boundaries of the fleet
-		alien[0][0].checkDirection(STEP, panelWidth);
+		alien[0][0].checkDirection(step, panelWidth);
 		
+		//starts a count of the number of aliens still visibile.
 		int alienCount = 0;
 		
 		//generates the aliens
@@ -189,11 +195,11 @@ public class TankPanel extends JPanel {
 						//determines which alien to draw and draws it
 						if (alienType) {
 						
-							alien[i][j].drawAlien(e, STEP);
+							alien[i][j].drawAlien(e, step);
 						
 						} else {
 						
-							alienAltImage[i][j].drawAlien(e, STEP);
+							alienAltImage[i][j].drawAlien(e, step);
 						}
 						
 					} else {
@@ -201,17 +207,17 @@ public class TankPanel extends JPanel {
 						//determines which alien to draw and draws it
 						if (alienType) {
 						
-							alienAltImage[i][j].drawAlien(e, STEP);
+							alienAltImage[i][j].drawAlien(e, step);
 						
 						} else {
 						
-							alien[i][j].drawAlien(e, STEP);
+							alien[i][j].drawAlien(e, step);
 						}
 						
 					}
 					
 					//checks to see if the alien drops a bomb
-					if(alien[i][j].checkDrop())
+					if(alien[i][j].checkDrop(player.getLevel()))
 					{
 						//if the random number is 1, a bomb is created
 						dropBomb(alien[i][j].getLeftEdge()+20, alien[i][j].getTopEdge()+20);
@@ -235,7 +241,10 @@ public class TankPanel extends JPanel {
 			
 		}
 		
-		
+		//If there are no aliens left, and new level is generated.
+		if (alienCount == 0) {
+			frame.nextLevel();
+		}
 		
 		alienDrawCounter ++;
 		
@@ -513,7 +522,7 @@ public class TankPanel extends JPanel {
 		//e.fillOval(explode.inX, explode.inY, explode.inner, explode.inner);
 		
 		//expands the size of the explosion
-		explode.expand(STEP);
+		explode.expand(step);
 		
 		//checks to see if the timer has expired
 		if(explode.timer>10)
@@ -544,6 +553,7 @@ public class TankPanel extends JPanel {
 	//the horizontal move method
 	public void moveHorizontal(int keyPress)
 	{
+				
 		this.keyPress = keyPress;
 		tank.setHorizontal(true);
 	}

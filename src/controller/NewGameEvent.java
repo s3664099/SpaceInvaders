@@ -23,12 +23,11 @@ public class NewGameEvent implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 
-		//clears the current screen if the frame to generate a new game
+		//clears the current screen of the frame to generate a new game
 		frame.clearScreen();
 		
 		//kills this dialogue box
 		bar.dispose();
-		
 	}
 
 }

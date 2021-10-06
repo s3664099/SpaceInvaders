@@ -11,6 +11,8 @@ public class SpaceFrame extends JFrame {
 	private TankPanel panel;
 	private GameStatusBar statusBar;
 	private Player player;
+	private int level = 1;
+	private int randomDedunction = 0;
 	
 	public SpaceFrame(Player player) 
 	{
@@ -51,6 +53,20 @@ public class SpaceFrame extends JFrame {
 		
 	}
 	
+	//Increases the player level by one
+	public void nextLevel() {
+		
+		remove(panel);
+		remove(statusBar);
+		
+		
+		player.increaseLevel();
+		newGame();
+		
+		this.revalidate();
+		this.repaint();
+	}
+	
 	//new game method
 	public void newGame() {
 				
@@ -64,7 +80,7 @@ public class SpaceFrame extends JFrame {
 	
 	//method that generates the main parts of the game
 	public void createGame() {
-		
+				
 		//creates a panel to place in the window
 		panel = new TankPanel(this, player);
 		

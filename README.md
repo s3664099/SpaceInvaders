@@ -166,7 +166,7 @@ This class handles all of the aliens, including the mothership. The class sets t
 
 - drawAlien(): This method draws the alien that the position that has been determined. It sets the colour, draws the outline, and the eyes. Once it has been drawn, it them moves it.
 
-- checkDrop(): This method simply determines whether the alien has dropped a missile, and it calls the method that determines this randomly.
+- checkDrop(): This method simply determines whether the alien has dropped a missile, and it calls the method that determines this randomly. It takes the level of the player and passes it through to the method that determines whether a bomb will be dropped.
 
 **Model**
 Where the view package handles all the graphics, the model handles the aspects of the items that are not used in the view. The move functions are handled here, as this information is a part of the model, as opposed to the view (though there are some view aspects to the movement.)
@@ -181,6 +181,8 @@ This class handles all of the logic for the player. Mind you, it really only has
 - getScore(): The current score is returned
 
 - getLevel(): The current level is returned.
+
+- increaseLevel(): increases the level of the player by one.
 
 - getLives(): The number of lives that the player has is returned.
 
@@ -202,7 +204,7 @@ Like the tank class above, this class defines the size, and the starting locatio
 
 - moveAlien(): This function moves the alien, and takes the step, which is the number of spaces that it moves, and a boolean that tells it whether it is moving down or not.
 
-- checkMissileDrop(): this generates a random number to determine whether the alien drops a bomb or not.
+- checkMissileDrop(): this generates a random number to determine whether the alien drops a bomb or not. It takes the level and multiplies it by 20, so that the higher the level, the more likely a bomb will be dropped.
 
 The rest are setters and getters, however some of them I have been a bit lazy with in that since all of them are the same, a variable is passed through to determine which value is passed back.
 
@@ -250,7 +252,10 @@ This implements a keylistener and listens for key presses, and acts on the tank 
 - keyTyped(): this checks to see if the key that is pressed if the spacebar, and if it is it calls the fireMissile() method on the tabk panel.
 
 *2. NewGameEvent*
+This class is called when the new game button is pressed in the game over screen. It calls the clearScreen() method in the panel, which creates a new game, and then kills the gameOver popup panel.
 
+*3. EndGameEvent*
+Basically, this just kills the panel which ends the game.
 
 
 
