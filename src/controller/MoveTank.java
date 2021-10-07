@@ -20,8 +20,6 @@ public class MoveTank implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		
-		System.out.println(e.getKeyCode());
-		
 		//called when a key is pressed
 		panel.moveHorizontal(e.getKeyCode());
 				

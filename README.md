@@ -37,11 +37,13 @@ It is necessary to indicate the package where the driver program is located. Whe
 ## Upgrades
 
 *Version 1*
-- Document Code
-- Next Levels Difficulty (Change backgrounds, )
+- ~~Document Code~~
+- ~~Next Levels Difficulty (Change backgrounds, )~~
 - Change Icons
 - ~~Add Background~~
 - ~~Set the setters & getters for the models.~~
+- Add Extra Life Buff (chance of dropping when alien is killed)
+- Move code into more methods
 
 *Version 2*
 - Add Barriers
@@ -62,6 +64,7 @@ What I'll do is that I'll walkthrough the code based upon the classes that are b
 
 ## Updates
 6 October 2021 - Added background image instead of a black background. Set up code for new level.
+7 October 2021 - Added the method to increase the level, began to reduce the size of the paintComponent method, and added multiple backgrounds.
 
 ### Classes
 
@@ -100,7 +103,15 @@ exist as the variables 'step'. The missle and tank steps are constants (though t
 
 - TankPanel(): this is the constructor for the TankPanel class, and takes a player and frame. It will create a new tank, and then populates the aliens. The aliens are set as alternating images. A time is set up which adds a listener for the keypresses. Whenever something changes on the panel it is redrawn.
 
+- RefreshAliens(): This method exists to refresh the aliens whenever they need to be refreshed. It has been pulled from the constructor as it handles all of the aspects that sets up the fleet.
+
 - paintComponent(): this is the main method for this class, and redraws the panel whenever it is drawn. It checks to see if a key has been pressed and executes the action if it has. It also moves the alien fleet. The method checks whether the alien exists, and whether the tank/alien has reached the edge of the screen, and if it has then it cannot move any further. The aliens will switch direction once an alien has hit the edge of the screen. When the aliens are drawn, it will determine whether a bomb has been dropped, and if it has, it will create a bomb. The bomb also checks to see whether it has hit the player, and will destroy the player if it has.
+
+- checkMove(): Method that handles the player's moves. Checks the keys that are being pressed, and responds appropriately.
+
+- checkAlienVisibility(): Originally a part of the paintComponent method, but pulled out as a private method. Checks the alien's visibility, and if it is visible, will display the alien.
+
+- newLevel(): Handles all of the calculations that goes into increasing the player's level.
 
 - checkMotherShip(): This method checks to see if a mothership appears. It is a random check. If it does, it sets it at one edge of the screen and it moves across to the other edge.
 

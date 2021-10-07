@@ -77,42 +77,21 @@ public class TankPanel extends JPanel {
 	//Variables to determine the type of alien being drawn
 	private boolean alienType = false;
 	private int alienDrawCounter = 0;
-	private BufferedImage backgroundImage;
+	private BufferedImage[] backgroundImage;
 	
-	public TankPanel(SpaceFrame frame, Player player)
+	public TankPanel(SpaceFrame frame, Player player, BufferedImage[] backgroundImage)
 	{
-		
-		//sets the background of the panel	
-		try {
-			backgroundImage = ImageIO.read(getClass().getResource("../../img/space-background-01.jpg"));
-		} catch (IOException e1) {
-			System.out.println(e1);
-			setBackground(Color.BLACK);
-		}
-		
+				
 		this.frame = frame;
 		this.player = player;
-		
-		step = player.getLevel();
-		
+		this.backgroundImage = backgroundImage;
+				
 		//creates a tank object
 		tank = new Tank();
 		
-		boolean alienImage = false;
-		
-		//creates an alien image and puts it in position
-		for (int i=0;i<FLEETROW;i++) {
-			for (int j=0;j<FLEETDEPTH; j++) {
-
-				alien[i][j] = new AlienImage(i,j, 0, alienImage);
-				alienAltImage[i][j] = new AlienImage(i,j, 1, alienImage);
-				alienImage = !alienImage;
-			}
-		}
-				
-		alien[0][0].setEdges(alien[FLEETROW-1][0].getRightEdge());
-		alienAltImage[0][0].setEdges(alienAltImage[FLEETROW-1][0].getRightEdge());
-				
+		//creates the alien fleet and puts it in position
+		this.refreshAliens();
+						
 		//creates a timer for when the graphics are moving and sets up an action listener
 		timer = new Timer(delay, new ActionListener() 
 		{
@@ -128,6 +107,29 @@ public class TankPanel extends JPanel {
 		timer.start();
 	}
 	
+	//generates the aliens
+	private void refreshAliens() {
+		
+		//Sets the speed of the alien
+		step = player.getLevel()/5;
+		step ++;
+		
+		boolean alienImage = false;
+		
+		for (int i=0;i<FLEETROW;i++) {
+			for (int j=0;j<FLEETDEPTH; j++) {
+				
+				alien[i][j] = new AlienImage(i,j, 0, alienImage);
+				alienAltImage[i][j] = new AlienImage(i,j, 1, alienImage);
+				alienImage = !alienImage;
+			}
+		}
+		
+		alien[0][0].setEdges(alien[FLEETROW-1][0].getRightEdge());
+		alienAltImage[0][0].setEdges(alienAltImage[FLEETROW-1][0].getRightEdge());
+		
+	}
+	
 	//this method paints the tank
 	public void paintComponent(Graphics e)
 	{
@@ -135,8 +137,12 @@ public class TankPanel extends JPanel {
 		//calls the superclass
 		super.paintComponent(e);
 		
+		System.out.println(step);
+		
+		int imageNo = player.getLevel()%6;
+		
 		//Draws the background image
-		e.drawImage(backgroundImage,0,0,800,600,this);
+		e.drawImage(backgroundImage[imageNo],0,0,800,600,this);
 		
 		//checks to see if the timer has been paused
 		if(pause) {
@@ -148,29 +154,7 @@ public class TankPanel extends JPanel {
 		//moves the object along the vertical axis
 		if(tank.isHorizontal() && !tankHit)
 		{
-			
-			//if the right arrow is pressed
-			if(keyPress == 39)
-			{
-				//and the tank is not at the right edge of the screen
-				if(tank.getXStart()<panelWidth-tank.getWidth())
-				{
-					//moves the tank to the right
-					tank.move(TANKSTEP);
-				}
-				
-			//if the left arrow is pressed	
-			} else if (keyPress == 37) {
-				
-				//and the tank is not at the left edge of the screen
-				if(tank.getXStart()>0)
-				{
-					//moves the tank to the left
-					tank.move(-TANKSTEP);
-				}
-				
-			}
-			
+			checkMove();			
 		}
 		
 		//this checks the fleet size to make sure that the fleet will cross the entire screen
@@ -191,30 +175,7 @@ public class TankPanel extends JPanel {
 					
 					alienCount +=1;
 					
-					if (alien[i][j].getAlienImageVersion()) {
-						//determines which alien to draw and draws it
-						if (alienType) {
-						
-							alien[i][j].drawAlien(e, step);
-						
-						} else {
-						
-							alienAltImage[i][j].drawAlien(e, step);
-						}
-						
-					} else {
-						
-						//determines which alien to draw and draws it
-						if (alienType) {
-						
-							alienAltImage[i][j].drawAlien(e, step);
-						
-						} else {
-						
-							alien[i][j].drawAlien(e, step);
-						}
-						
-					}
+					checkAlienVisibility(i,j, e);
 					
 					//checks to see if the alien drops a bomb
 					if(alien[i][j].checkDrop(player.getLevel()))
@@ -242,8 +203,11 @@ public class TankPanel extends JPanel {
 		}
 		
 		//If there are no aliens left, and new level is generated.
+		//A new fleet is generated and the frame is updated
 		if (alienCount == 0) {
-			frame.nextLevel();
+			
+			newLevel();
+			
 		}
 		
 		alienDrawCounter ++;
@@ -307,7 +271,74 @@ public class TankPanel extends JPanel {
 		
 	}
 	
-	public void checkMotherShip() {
+	//method that handles the player moving
+	private void checkMove() {
+		
+		//if the right arrow is pressed
+		if(keyPress == 39)
+		{
+			//and the tank is not at the right edge of the screen
+			if(tank.getXStart()<panelWidth-tank.getWidth())
+			{
+				//moves the tank to the right
+				tank.move(TANKSTEP);
+			}
+			
+		//if the left arrow is pressed	
+		} else if (keyPress == 37) {
+			
+			//and the tank is not at the left edge of the screen
+			if(tank.getXStart()>0)
+			{
+				//moves the tank to the left
+				tank.move(-TANKSTEP);
+			}
+			
+		}
+		
+	}
+	
+	//Method handling the alien visibility and size of the fleet.
+	private void checkAlienVisibility(int i, int j, Graphics e) {
+		
+		if (alien[i][j].getAlienImageVersion()) {
+			//determines which alien to draw and draws it
+			if (alienType) {
+			
+				alien[i][j].drawAlien(e, step);
+			
+			} else {
+			
+				alienAltImage[i][j].drawAlien(e, step);
+			}
+			
+		} else {
+			
+			//determines which alien to draw and draws it
+			if (alienType) {
+			
+				alienAltImage[i][j].drawAlien(e, step);
+			
+			} else {
+			
+				alien[i][j].drawAlien(e, step);
+			}
+			
+		}
+	}
+	
+	//Sets up a new level
+	private void newLevel() {
+		
+		player.increaseLevel();
+		this.refreshAliens();
+		pause = true;
+		frame.updateStatus();
+		
+	}
+	
+	//Determines whether a mothership appears on the screen
+	private void checkMotherShip() {
 		
 		Random random = new Random();
 

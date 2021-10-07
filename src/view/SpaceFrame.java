@@ -1,6 +1,11 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import Model.Player;
 import controller.MoveTank;
@@ -11,13 +16,29 @@ public class SpaceFrame extends JFrame {
 	private TankPanel panel;
 	private GameStatusBar statusBar;
 	private Player player;
-	private int level = 1;
-	private int randomDedunction = 0;
+	private int images = 6;
+	private BufferedImage[] backgroundImage = new BufferedImage[images];
+	
 	
 	public SpaceFrame(Player player) 
 	{
 		//places a title at the top of the frame
 		super("Space Invaders");
+		
+		//sets the background of the panel	
+		try {
+			
+			for (int x=0;x<images;x++) {
+			
+				int imageNo = x+1;
+				String image = String.format("../../img/space-background-0%d.jpg", imageNo);
+				backgroundImage[x] = ImageIO.read(getClass().
+						getResource(image));
+			}
+		} catch (IOException e1) {
+			System.out.println(e1);
+			setBackground(Color.BLACK);
+		}
 		
 		this.player = player;
 		
@@ -53,20 +74,6 @@ public class SpaceFrame extends JFrame {
 		
 	}
 	
-	//Increases the player level by one
-	public void nextLevel() {
-		
-		remove(panel);
-		remove(statusBar);
-		
-		
-		player.increaseLevel();
-		newGame();
-		
-		this.revalidate();
-		this.repaint();
-	}
-	
 	//new game method
 	public void newGame() {
 				
@@ -82,7 +89,7 @@ public class SpaceFrame extends JFrame {
 	public void createGame() {
 				
 		//creates a panel to place in the window
-		panel = new TankPanel(this, player);
+		panel = new TankPanel(this, player, backgroundImage);
 		
 		//Adds a key listener to the panel
 		panel.addKeyListener(new MoveTank(panel));

@@ -14,7 +14,7 @@ public class Start {
 			
 			//Runs the thread as an inner class
 			public void run ()
-			{
+			{ 
 				new SpaceFrame(new Player());
 			}
 		});
