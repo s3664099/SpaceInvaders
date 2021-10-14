@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -35,9 +37,12 @@ public class TankPanel extends JPanel {
 	
 	//creates a tank object
 	private Tank tank;
+	private ImageIcon tankIcon;
 	
 	//creates a missile object
 	private Missile missile;
+	private ImageIcon missileIcon;
+	private ImageIcon bombIcon;
 	private int bombScore = 500;
 	
 	//defines the size of the fleet
@@ -88,6 +93,7 @@ public class TankPanel extends JPanel {
 				
 		//creates a tank object
 		tank = new Tank();
+		tankIcon = createIcon("tank.png",tank.getWidth(),tank.getHeight());
 		
 		//creates the alien fleet and puts it in position
 		this.refreshAliens();
@@ -119,8 +125,8 @@ public class TankPanel extends JPanel {
 		for (int i=0;i<FLEETROW;i++) {
 			for (int j=0;j<FLEETDEPTH; j++) {
 				
-				alien[i][j] = new AlienImage(i,j, 0, alienImage);
-				alienAltImage[i][j] = new AlienImage(i,j, 1, alienImage);
+				alien[i][j] = new AlienImage(i,j, 0, alienImage, this);
+				alienAltImage[i][j] = new AlienImage(i,j, 1, alienImage, this);
 				alienImage = !alienImage;
 			}
 		}
@@ -130,15 +136,23 @@ public class TankPanel extends JPanel {
 		
 	}
 	
+	public ImageIcon createIcon(String imageLocation, int width, int height) {
+		
+		ImageIcon icon = new ImageIcon(getClass().getResource(imageLocation));
+		Image image = icon.getImage();
+		Image newImg = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		icon = new ImageIcon(newImg);
+		
+		return icon;
+	}
+	
 	//this method paints the tank
 	public void paintComponent(Graphics e)
 	{
 				
 		//calls the superclass
 		super.paintComponent(e);
-		
-		System.out.println(step);
-		
+				
 		int imageNo = player.getLevel()%6;
 		
 		//Draws the background image
@@ -157,65 +171,7 @@ public class TankPanel extends JPanel {
 			checkMove();			
 		}
 		
-		//this checks the fleet size to make sure that the fleet will cross the entire screen
-		checkSize();
-		
-		//checks the direction and sets the boundaries of the fleet
-		alien[0][0].checkDirection(step, panelWidth);
-		
-		//starts a count of the number of aliens still visibile.
-		int alienCount = 0;
-		
-		//generates the aliens
-		for (int i = 0;i<FLEETROW;i++) {
-			for (int j=0;j<FLEETDEPTH;j++) {
-
-				//checks to see if the alien is visible
-				if(alien[i][j].getVisibility()) {
-					
-					alienCount +=1;
-					
-					checkAlienVisibility(i,j, e);
-					
-					//checks to see if the alien drops a bomb
-					if(alien[i][j].checkDrop(player.getLevel()))
-					{
-						//if the random number is 1, a bomb is created
-						dropBomb(alien[i][j].getLeftEdge()+20, alien[i][j].getTopEdge()+20);
-					}
-					
-					//Checks to see if the alien has collided with the player
-					//or the alien has reached the bottom of the screen (ie, has landed)
-					//If it has, then it is game over man, game over.
-					if(alien[i][j].getBottomEdge()>getHeight() ||
-							(alien[i][j].getBottomEdge()>tank.getGunY() 
-							&& alien[i][j].getLeftEdge()>tank.getXStart()
-							&& alien[i][j].getRightEdge()<(tank.getXStart()+tank.getWidth()))) {
-
-						drawExplosion(e);
-						tankHit=true;
-						timer.stop();
-						frame.gameOver();
-					}
-				}
-			}
-			
-		}
-		
-		//If there are no aliens left, and new level is generated.
-		//A new fleet is generated and the frame is updated
-		if (alienCount == 0) {
-			
-			newLevel();
-			
-		}
-		
-		alienDrawCounter ++;
-		
-		if(alienDrawCounter==10) {
-			alienType = !alienType;	
-			alienDrawCounter=0;
-		}
+		drawAliens(e);
 									
 		//sets the bomb colour to yellow
 		e.setColor(Color.YELLOW);
@@ -248,18 +204,14 @@ public class TankPanel extends JPanel {
 		
 		//checks to see if the tank if functioning
 		if(!tankHit) {
-			//sets the colour of the object
-			e.setColor(Color.BLUE);
-		
-			//sets the shape of the object
-			e.fillRect(tank.getXStart(),tank.getYStart(),tank.getWidth(),tank.getHeight());
-			e.fillRect(tank.getTopX(),tank.getTopY(),tank.getTopWidth(),tank.getTopHeight());
-			e.fillRect(tank.getGunX(),tank.getGunY(),tank.getTopHeight(),tank.getGunHeight());
+						
+			tankIcon.paintIcon(this, e, tank.getXStart(), tank.getYStart());
+
 		}
 		
 		if (motherShipAppear) {
 			motherShip.checkDirection(8, panelWidth);
-			motherShip.drawAlien(e, motherShipStep);
+			motherShip.drawAlien(this, e, motherShipStep);
 						
 			if (motherShip.getLeftEdge()>1500) {
 				motherShipAppear = false;
@@ -269,6 +221,68 @@ public class TankPanel extends JPanel {
 			checkMotherShip();
 		}
 		
+	}
+	
+	private void drawAliens(Graphics e) {
+		//this checks the fleet size to make sure that the fleet will cross the entire screen
+		checkSize();
+				
+		//checks the direction and sets the boundaries of the fleet
+		alien[0][0].checkDirection(step, panelWidth);
+				
+		//starts a count of the number of aliens still visibile.
+		int alienCount = 0;
+				
+		//generates the aliens
+		for (int i = 0;i<FLEETROW;i++) {
+			for (int j=0;j<FLEETDEPTH;j++) {
+
+				//checks to see if the alien is visible
+				if(alien[i][j].getVisibility()) {
+							
+					alienCount +=1;
+							
+					checkAlienVisibility(i,j, e);
+							
+					//checks to see if the alien drops a bomb
+					if(alien[i][j].checkDrop(player.getLevel()))
+					{
+						//if the random number is 1, a bomb is created
+						dropBomb(alien[i][j].getLeftEdge()+20, alien[i][j].getTopEdge()+20);
+					}
+							
+					//Checks to see if the alien has collided with the player
+					//or the alien has reached the bottom of the screen (ie, has landed)
+					//If it has, then it is game over man, game over.
+					if(alien[i][j].getBottomEdge()>getHeight() ||
+							(alien[i][j].getBottomEdge()>tank.getGunY() 
+							&& alien[i][j].getLeftEdge()>tank.getXStart()
+							&& alien[i][j].getRightEdge()<(tank.getXStart()+tank.getWidth()))) {
+
+						drawExplosion(e);
+						tankHit=true;
+						timer.stop();
+						frame.gameOver();
+					}
+				}
+			}
+					
+		}
+				
+		//If there are no aliens left, and new level is generated.
+		//A new fleet is generated and the frame is updated
+		if (alienCount == 0) {
+					
+			newLevel();
+					
+		}
+			
+		alienDrawCounter ++;
+				
+		if(alienDrawCounter==10) {
+			alienType = !alienType;	
+			alienDrawCounter=0;
+		}
 	}
 	
 	//method that handles the player moving
@@ -305,11 +319,11 @@ public class TankPanel extends JPanel {
 			//determines which alien to draw and draws it
 			if (alienType) {
 			
-				alien[i][j].drawAlien(e, step);
+				alien[i][j].drawAlien(this, e, step);
 			
 			} else {
 			
-				alienAltImage[i][j].drawAlien(e, step);
+				alienAltImage[i][j].drawAlien(this, e, step);
 			}
 			
 		} else {
@@ -317,11 +331,11 @@ public class TankPanel extends JPanel {
 			//determines which alien to draw and draws it
 			if (alienType) {
 			
-				alienAltImage[i][j].drawAlien(e, step);
+				alienAltImage[i][j].drawAlien(this, e, step);
 			
 			} else {
 			
-				alien[i][j].drawAlien(e, step);
+				alien[i][j].drawAlien(this, e, step);
 			}
 			
 		}
@@ -343,7 +357,7 @@ public class TankPanel extends JPanel {
 		Random random = new Random();
 
 		if (random.nextInt(1000)<1) {
-			motherShip = new AlienImage(0,0, 2, false);
+			motherShip = new AlienImage(0,0, 2, false, this);
 			motherShip.setLeftSide(0);
 			motherShip.setRightSide(panelWidth);
 			motherShipAppear = true;
@@ -524,7 +538,7 @@ public class TankPanel extends JPanel {
 				
 				//if it hasn't, moves it upwards
 				missile.move(BOMBSTEP);
-				e.fillRect(missile.getStartX(), missile.getStartY(), missile.getWidth(), missile.getHeight());	
+				missileIcon.paintIcon(this, e, missile.getStartX(), missile.getStartY());	
 				
 			} else {
 			
@@ -538,7 +552,7 @@ public class TankPanel extends JPanel {
 	public void drawBomb(Graphics e, Missile bomb)
 	{
 		bomb.drop(BOMBSTEP);
-		e.fillRect(bomb.getStartX(), bomb.getStartY(), bomb.getWidth(), bomb.getHeight());
+		bombIcon.paintIcon(this, e, bomb.getStartX(), bomb.getStartY());
 	}
 	
 	//method to draw an explosion
@@ -596,6 +610,7 @@ public class TankPanel extends JPanel {
 			
 			//if it isn't, creates a new missile
 			missile = new Missile(tank.getGunX(), tank.getGunY());
+			missileIcon = createIcon("bullet.png",missile.getWidth(),missile.getHeight());
 			missileVisible=true;
 		}
 	}
@@ -605,6 +620,7 @@ public class TankPanel extends JPanel {
 	{
 		
 		Missile bomb = new Missile(x,y);
+		bombIcon = createIcon("bomb.png",bomb.getWidth(),bomb.getHeight());
 
 		//adds the bomb to the list of bombs
 		bombs.add(bomb);

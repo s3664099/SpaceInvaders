@@ -2,8 +2,8 @@ package Model;
 
 public class Missile {
 	
-	private int width = 10;
-	private int height = 20;
+	private int width = 20;
+	private int height = 40;
 	private int startX;
 	private int startY;
 	

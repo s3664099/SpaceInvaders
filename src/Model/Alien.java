@@ -97,9 +97,9 @@ public abstract class Alien {
 		
 		Random random = new Random();
 		
-		levelModifier = levelModifier * 20;
+		levelModifier = levelModifier * 200;
 		
-		return random.nextInt(1000-levelModifier);
+		return random.nextInt(4000-levelModifier);
 	}
 	
 	//getters for drawing the alien graphic

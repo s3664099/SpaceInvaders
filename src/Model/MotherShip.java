@@ -11,7 +11,7 @@ public class MotherShip extends Alien {
 	private int score = 100;
 	private int leftEdge = 0;
 	private int rightEdge = 70;
-	private int bottom = 40;
+	private int bottom = 20;
 	
 	public MotherShip() {
 		

@@ -31,7 +31,7 @@ public class SpaceFrame extends JFrame {
 			for (int x=0;x<images;x++) {
 			
 				int imageNo = x+1;
-				String image = String.format("../../img/space-background-0%d.jpg", imageNo);
+				String image = String.format("space-background-0%d.jpg", imageNo);
 				backgroundImage[x] = ImageIO.read(getClass().
 						getResource(image));
 			}

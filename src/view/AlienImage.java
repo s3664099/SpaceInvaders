@@ -3,6 +3,8 @@ package view;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import javax.swing.ImageIcon;
+
 import Model.Alien;
 import Model.AlienTopOne;
 import Model.AlienTopTwo;
@@ -21,18 +23,44 @@ public class AlienImage {
 	
 	private int type = 0;
 	private boolean alienImage;
+	private ImageIcon alienIcon;
 	
-	public AlienImage(int horizontal, int vertical, int type, boolean alienImage)
+	public AlienImage(int horizontal, int vertical, int type, boolean alienImage, TankPanel panel)
 	{
 		this.type = type;
 		this.alienImage = alienImage;
 		
 		if (type == 0) {
 			alien = new AlienTopOne();
+			
+			//Checks which level the alien is on, and displays the icon for that level.
+			if (vertical == 0) {
+				alienIcon = panel.createIcon("Alien-1a.png", 
+						alien.getDepth(true), alien.getDepth(false));
+			} else if (vertical == 1) {
+				alienIcon = panel.createIcon("Alien-2a.png", 
+						alien.getDepth(true), alien.getDepth(false));
+			} else {
+				alienIcon = panel.createIcon("Alien-3a.png", 
+						alien.getDepth(true), alien.getDepth(false));
+			}
 		} else if (type == 1) {
 			alien = new AlienTopTwo();
+			
+			if (vertical == 0) {
+				alienIcon = panel.createIcon("Alien-1b.png", alien.getDepth(true), 
+						alien.getDepth(false));
+			} else if (vertical == 1) {
+				alienIcon = panel.createIcon("Alien-2b.png", alien.getDepth(true), 
+						alien.getDepth(false));
+			} else {
+				alienIcon = panel.createIcon("Alien-3b.png", alien.getDepth(true), 
+						alien.getDepth(false));
+			}
+			
 		} else if (type == 2 ) {
 			alien = new MotherShip();
+			alienIcon = panel.createIcon("mothership.png", alien.getDepth(true), alien.getDepth(false));
 		}
 		
 		if (type != 2) {
@@ -155,27 +183,11 @@ public class AlienImage {
 		
 	}
 	
-	public void drawAlien(Graphics e, int STEP) {
+	public void drawAlien(TankPanel panel, Graphics e, int STEP) {
 		
-		//sets the alien colour to grey
-		e.setColor(Color.GRAY);
-	
 		//creates its shape
-		e.fillPolygon(alien.getXPos(), alien.getYPos(), alien.getNoPoints());
-	
-		//sets the eye colours to white
-		if (type == 0) {
-			e.setColor(Color.WHITE);
-		} else if (type == 1) {
-			e.setColor(Color.YELLOW);
-		}
-
-		if (type != 2) {
-			//creates the eyes
-			e.fillRect(alien.getEyeCoords(1), alien.getEyeCoords(2), alien.getEyeCoords(5), alien.getEyeCoords(5));
-			e.fillRect(alien.getEyeCoords(3), alien.getEyeCoords(4), alien.getEyeCoords(5), alien.getEyeCoords(5));
-		}
-			
+		alienIcon.paintIcon(panel, e, alien.getLeftEdge(), alien.getBottomEdge());
+				
 		//this is to get away from the static variable
 		boolean downMove = movingDown;
 		

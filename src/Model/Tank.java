@@ -8,8 +8,8 @@ public class Tank {
 	
 	//This is the tank object at the bottom of the screen.
 	//sets the size of the tank
-	private int width=50;
-	private int height=25;
+	private int width=100;
+	private int height=50;
 	private int topWidth=30;
 	private int topHeight=10;
 	private int gunHeight=20;

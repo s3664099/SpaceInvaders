@@ -1,6 +1,6 @@
 # SpaceInvaders
 **Author**: David Sarkies
-**Version**: 0.6
+**Version**: 1.0
 
 ## Introduction
 This was a project that I created over the mid-semester break in 2019. It is basically a version of Space Invaders. Close, but pretty scrappy. The main reason that I worked on this was so that I could retain the knowledge that I had built up over the past year and a half in my computer science degree. Also, I felt that Space Invaders was reasonably simply but also reasonably challenging, so that it would challenge me, but it would also be achievable.
@@ -34,20 +34,22 @@ It is necessary to indicate the package where the driver program is located. Whe
 
 ![Screenshot](https://raw.githubusercontent.com/s3664099/SpaceInvaders/master/img/Screenshot.png)
 
+Due to difficulties access the external directory when compiling the game outside of Eclipse, I have moved all of the images into the view directory.
+
 ## Upgrades
 
 *Version 1*
 - ~~Document Code~~
 - ~~Next Levels Difficulty (Change backgrounds, )~~
-- Change Icons
+- ~~Change Icons~~
 - ~~Add Background~~
 - ~~Set the setters & getters for the models.~~
-- Add Extra Life Buff (chance of dropping when alien is killed)
-- Move code into more methods
+- ~~Move code into more methods~~
 
 *Version 2*
 - Add Barriers
 - Power Ups
+	- extra life
 	- shields
 	- laser that strikes through
 	- guided missiles
@@ -107,9 +109,13 @@ exist as the variables 'step'. The missle and tank steps are constants (though t
 
 - paintComponent(): this is the main method for this class, and redraws the panel whenever it is drawn. It checks to see if a key has been pressed and executes the action if it has. It also moves the alien fleet. The method checks whether the alien exists, and whether the tank/alien has reached the edge of the screen, and if it has then it cannot move any further. The aliens will switch direction once an alien has hit the edge of the screen. When the aliens are drawn, it will determine whether a bomb has been dropped, and if it has, it will create a bomb. The bomb also checks to see whether it has hit the player, and will destroy the player if it has.
 
+- createIcon(): Takes the location of the icon, and the size of the icon, adjusts the size for the game, creates it, and returns it.
+
 - checkMove(): Method that handles the player's moves. Checks the keys that are being pressed, and responds appropriately.
 
 - checkAlienVisibility(): Originally a part of the paintComponent method, but pulled out as a private method. Checks the alien's visibility, and if it is visible, will display the alien.
+
+- drawAliens(): This has been pulled from the paintComponent() method to handle the logic that draws the aliens.
 
 - newLevel(): Handles all of the calculations that goes into increasing the player's level.
 
